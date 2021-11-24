@@ -3,11 +3,11 @@ const fs = require("fs");
 const User = require("../model/User");
 const Log = require("../model/Log");
 
-const clientCert = fs.readFileSync(
-  "./certs/smartfarmer-client-nodejs.cert.pem"
-);
-const clientKey = fs.readFileSync("./certs/smartfarmer-client-nodejs.key");
-const caFile = fs.readFileSync("./certs/root-ca.cert.pem");
+// const clientCert = fs.readFileSync(
+//   "./certs/smartfarmer-client-nodejs.cert.pem"
+// );
+// const clientKey = fs.readFileSync("./certs/smartfarmer-client-nodejs.key");
+// const caFile = fs.readFileSync("./certs/root-ca.cert.pem");
 
 const mqttClient = mqtt.connect(
   `mqtt://${process.env.MQTT_HOST}:${process.env.MQTT_PORT}`,
