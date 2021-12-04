@@ -144,6 +144,8 @@ mqttClient.on("message", async (topic, message) => {
     base_solution_level: data.base_solution_level,
     tds: data.tds,
     ec: data.ec,
+    sent: data.sent,
+    received: Date.now(),
     // image_filename: `${timestamp}.jpg`,
   });
 
