@@ -13,6 +13,8 @@ const logSchema = new mongoose.Schema(
     base_solution_level: Number,
     tds: Number,
     ec: Number,
+    sent: Number,
+    received: Number,
     // image_filename: String,
   },
   {
