@@ -15,6 +15,7 @@ const logSchema = new mongoose.Schema(
     ec: Number,
     sent: Number,
     received: Number,
+    latency: Number,
     // image_filename: String,
   },
   {
