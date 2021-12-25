@@ -88,7 +88,7 @@ router.get("/image/:user_id/:filename", (req, res) => {
 router.get("/latest", jwt, async (req, res) => {
   let agroclimateLog = await Log.findOne(
     { user_id: req.user.user_id },
-    { _id: 0, user_id: 0, __v: 0, updatedAt: 0, createdAt: 0 },
+    { _id: 0, user_id: 0, __v: 0, updatedAt: 0 },
     {
       sort: {
         createdAt: -1,
