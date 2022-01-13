@@ -87,6 +87,8 @@ mqttClient.on("connect", (connack) => {
   });
 });
 
+let dataIndex = 0;
+
 mqttClient.on("message", async (topic, message) => {
   let data = undefined;
 
@@ -147,6 +149,7 @@ mqttClient.on("message", async (topic, message) => {
     sent: data.sent,
     received: Date.now(),
     latency: Date.now() - data.sent,
+    index: dataIndex++,
     // image_filename: `${timestamp}.jpg`,
   });
 
