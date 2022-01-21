@@ -3,19 +3,10 @@ const fs = require("fs");
 const User = require("../model/User");
 const Log = require("../model/Log");
 
-// const clientCert = fs.readFileSync(
-//   "./certs/smartfarmer-client-nodejs.cert.pem"
-// );
-// const clientKey = fs.readFileSync("./certs/smartfarmer-client-nodejs.key");
-// const caFile = fs.readFileSync("./certs/root-ca.cert.pem");
-
 const mqttClient = mqtt.connect(
   `mqtt://${process.env.MQTT_HOST}:${process.env.MQTT_PORT}`,
   {
     rejectUnauthorized: false,
-    // ca: [caFile],
-    // key: clientKey,
-    // cert: clientCert,
     username: process.env.MQTT_USERNAME,
     password: process.env.MQTT_PASSWORD,
     // clientId: "friansh-" + Math.random().toString(16).substr(2, 8),
@@ -136,21 +127,16 @@ mqttClient.on("message", async (topic, message) => {
 
   const newLog = new Log({
     user_id: user._id,
-    // temperature: data.temperature,
-    // humidity: data.humidity,
     ph: data.ph,
-    light_intensity: data.light_intensity,
+    light_intensity_inside: data.light_intensity_inside,
+    light_intensity_outside: data.light_intensity_outside,
     nutrient_flow: data.nutrient_flow,
-    // nutrient_level: data.nutrient_level,
-    // acid_solution_level: data.acid_solution_level,
-    // base_solution_level: data.base_solution_level,
     tds: data.tds,
     ec: data.ec,
     sent: data.sent,
     received: Date.now(),
     latency: Date.now() - data.sent,
     index: dataIndex++,
-    // image_filename: `${timestamp}.jpg`,
   });
 
   redisClient.DEL(`${user._id}:log`);
@@ -168,17 +154,12 @@ mqttClient.on("message", async (topic, message) => {
     user._id,
     JSON.stringify({
       user_id: user._id,
-      // temperature: data.temperature,
-      // humidity: data.humidity,
       ph: data.ph,
-      light_intensity: data.light_intensity,
+      light_intensity_inside: data.light_intensity_inside,
+      light_intensity_outside: data.light_intensity_outside,
       nutrient_flow: data.nutrient_flow,
-      // nutrient_level: data.nutrient_level,
-      // acid_solution_level: data.acid_solution_level,
-      // base_solution_level: data.base_solution_level,
       tds: data.tds,
       ec: data.ec,
-      // image_url: `${process.env.APP_URL}/log/image/${user._id}/${timestamp}.jpg`,
     })
   );
 });
