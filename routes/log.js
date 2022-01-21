@@ -18,7 +18,7 @@ router.get("/", jwt, async (req, res) => {
   Log.find({ user_id: req.user.user_id }, (err, logs) => {
     if (err) return res.status(200).send("There is an error on the server :(");
 
-    agroclimateLog = agroclimateLog.map((log) => ({
+    agroclimateLog = logs.map((log) => ({
       ph: log.ph,
       light_intensity_inside: log.light_intensity_inside,
       light_intensity_outside: log.light_intensity_outside,
