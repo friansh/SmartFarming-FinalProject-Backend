@@ -16,35 +16,38 @@ const redis = require("../context/redis");
 router.get("/device", (req, res) => {
   if (req.body.device_token == null)
     return res.status(422).json("No device token found in the request.");
-  const user = await User.findOne(
+  User.findOne(
     {
       device_token: req.body.device_token,
     },
-    { _id: 1 }
-  ).exec();
-
-  if (user == null) return res.status(404).json("Device not found.");
-
-  Configuration.findOne(
-    {
-      user_id: user._id,
-    },
-    {
-      _id: 0,
-      refresh_time: 1,
-      logging_time: 1,
-      ph: 1,
-      light_intensity: 1,
-      nutrient_flow: 1,
-      day_start: 1,
-      day_end: 1,
-      nutrient_level: 1,
-      updatedAt: 1,
-    },
-    (err, config) => {
+    { _id: 1 },
+    (err, user) => {
       if (err)
         return res.status(200).send("There is an error on the server :(");
-      res.json(config);
+      if (user == null) return res.status(404).json("Device not found.");
+
+      Configuration.findOne(
+        {
+          user_id: user._id,
+        },
+        {
+          _id: 0,
+          refresh_time: 1,
+          logging_time: 1,
+          ph: 1,
+          light_intensity: 1,
+          nutrient_flow: 1,
+          day_start: 1,
+          day_end: 1,
+          nutrient_level: 1,
+          updatedAt: 1,
+        },
+        (err, config) => {
+          if (err)
+            return res.status(200).send("There is an error on the server :(");
+          res.json(config);
+        }
+      );
     }
   );
 });
