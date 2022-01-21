@@ -13,7 +13,7 @@ const jwt = express_jwt({
 const { promisify } = require("util");
 const redis = require("../context/redis");
 
-router.post("/device", async (req, res) => {
+router.get("/device", (req, res) => {
   if (req.body.device_token == null)
     return res.status(422).json("No device token found in the request.");
   const user = await User.findOne(
@@ -25,7 +25,7 @@ router.post("/device", async (req, res) => {
 
   if (user == null) return res.status(404).json("Device not found.");
 
-  const config = await Configuration.findOne(
+  Configuration.findOne(
     {
       user_id: user._id,
     },
@@ -39,10 +39,14 @@ router.post("/device", async (req, res) => {
       day_start: 1,
       day_end: 1,
       nutrient_level: 1,
+      updatedAt: 1,
+    },
+    (err, config) => {
+      if (err)
+        return res.status(200).send("There is an error on the server :(");
+      res.json(config);
     }
-  ).exec();
-
-  return res.json(config);
+  );
 });
 
 router.patch("/", jwt, async (req, res) => {
