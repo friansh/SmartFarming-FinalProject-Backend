@@ -15,38 +15,21 @@ const { promisify } = require("util");
 const redis = require("../context/redis");
 
 router.get("/", jwt, async (req, res) => {
-  // const getCachedLog = promisify(redis.GET).bind(redis);
-  // const cachedLog = await getCachedLog(`${req.user.user_id}:log`);
+  Log.find({ user_id: req.user.user_id }, (err, logs) => {
+    if (err) return res.status(200).send("There is an error on the server :(");
 
-  // if (cachedLog) {
-  //   res.status(200).send(JSON.parse(cachedLog));
-  //   return;
-  // }
+    agroclimateLog = agroclimateLog.map((log) => ({
+      ph: log.ph,
+      light_intensity_inside: log.light_intensity_inside,
+      light_intensity_outside: log.light_intensity_outside,
+      nutrient_flow: log.nutrient_flow,
+      tds: log.tds,
+      ec: log.ec,
+      createdAt: log.createdAt,
+    }));
 
-  let agroclimateLog = await Log.find({ user_id: req.user.user_id });
-
-  agroclimateLog = agroclimateLog.map((log) => ({
-    temperature: log.temperature,
-    humidity: log.humidity,
-    ph: log.ph,
-    light_intensity: log.light_intensity,
-    nutrient_flow: log.nutrient_flow,
-    nutrient_level: log.nutrient_level,
-    acid_solution_level: log.acid_solution_level,
-    base_solution_level: log.base_solution_level,
-    tds: log.tds,
-    ec: log.ec,
-    image_url: `${process.env.APP_URL}/log/image/${req.user.user_id}/${log.image_filename}`,
-    createdAt: log.createdAt,
-  }));
-
-  // redis.SETEX(
-  //   `${req.user.user_id}:log`,
-  //   process.env.REDIS_CACHE_EXPIRES,
-  //   JSON.stringify(agroclimateLog)
-  // );
-
-  res.status(200).send(agroclimateLog);
+    res.status(200).send(agroclimateLog);
+  });
 });
 
 router.post("/clear", jwt, async (req, res) => {
