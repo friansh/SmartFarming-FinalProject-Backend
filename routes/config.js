@@ -13,7 +13,7 @@ const jwt = express_jwt({
 const { promisify } = require("util");
 const redis = require("../context/redis");
 
-router.get("/device", (req, res) => {
+router.post("/device", (req, res) => {
   if (req.body.device_token == null)
     return res.status(422).json("No device token found in the request.");
   User.findOne(
