@@ -46,7 +46,7 @@ router.post("/device", async (req, res) => {
 });
 
 router.patch("/", jwt, async (req, res) => {
-  const agroclimateConfig = await Configuration.findOneAndUpdate(
+  Configuration.findOneAndUpdate(
     { user_id: req.user.user_id },
     {
       refresh_time: req.body.refresh_time,
@@ -58,15 +58,30 @@ router.patch("/", jwt, async (req, res) => {
       ec: req.body.ec,
       day_start: req.body.day_start,
       day_end: req.body.day_end,
+    },
+    { new: true },
+    (err, doc) => {
+      if (err)
+        return res.status(200).send("There is an error on the server :(");
+
+      res.status(200).json({
+        message: "Your new agroclimate configurations has been saved.",
+        device_config: {
+          refresh_time: doc.refresh_time,
+          logging_time: doc.logging_time,
+        },
+        agroclimate_config: {
+          ph: doc.ph,
+          ec: doc.ec,
+          tds: doc.tds,
+          light_intensity: doc.light_intensity,
+          nutrient_flow: doc.nutrient_flow,
+          day_start: doc.day_start,
+          day_end: doc.day_end,
+        },
+      });
     }
   );
-
-  redis.DEL(`${req.user.user_id}:config`);
-
-  res.status(200).json({
-    message: "Your new agroclimate configurations has been saved.",
-    new_configs: agroclimateConfig,
-  });
 });
 
 router.get("/", jwt, (req, res) => {
