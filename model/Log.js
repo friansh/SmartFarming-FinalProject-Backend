@@ -3,21 +3,16 @@ const mongoose = require("mongoose");
 const logSchema = new mongoose.Schema(
   {
     user_id: String,
-    temperature: Number,
-    humidity: Number,
     ph: Number,
-    light_intensity: Number,
+    light_intensity_inside: Number,
+    light_intensity_outside: Number,
     nutrient_flow: Number,
-    nutrient_level: Number,
-    acid_solution_level: Number,
-    base_solution_level: Number,
     tds: Number,
     ec: Number,
     sent: Number,
     received: Number,
     latency: Number,
     index: Number,
-    // image_filename: String,
   },
   {
     timestamps: true,
