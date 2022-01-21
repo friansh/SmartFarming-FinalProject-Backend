@@ -15,41 +15,10 @@ const User = require("../model/User");
 const Configuration = require("../model/Config");
 
 const random = require("../context/random");
-const redis = require("../context/redis");
 
 router.get("/", mw_jwt, (req, res) => {
-  redis.HGETALL(`${req.user.user_id}:profile`, async (err, rep) => {
-    if (rep) {
-      res.status(200).send({
-        user_id: rep.user_id,
-        email: rep.email,
-        fullname: rep.fullname,
-        address: rep.address,
-        device_token: rep.device_token,
-      });
-      return;
-    }
-
-    const user = await User.findById(req.user.user_id);
-
-    redis.HMSET(
-      `${req.user.user_id}:profile`,
-      "user_id",
-      user.id,
-      "email",
-      user.email,
-      "fullname",
-      user.fullname,
-      "address",
-      user.address,
-      "device_token",
-      user.device_token
-    );
-
-    redis.EXPIRE(
-      `${req.user.user_id}:profile`,
-      process.env.REDIS_CACHE_EXPIRES
-    );
+  User.findById(req.user.user_id, (err, user) => {
+    if (err) return res.status(200).send("There is an error on the server :(");
 
     res.status(200).send({
       user_id: user._id,
@@ -120,8 +89,6 @@ router.patch("/", mw_jwt, async (req, res) => {
     return;
   });
 
-  redis.DEL(`${req.user.user_id}:profile`);
-
   res
     .status(200)
     .send({ message: "The user profile has been successfully updated." });
@@ -182,8 +149,6 @@ router.patch("/device", mw_jwt, async (req, res) => {
     return;
   });
 
-  redis.DEL(`${req.user.user_id}:profile`);
-
   res.status(200).send({
     message: "The user device token has been successfully re-randomized.",
   });
@@ -222,20 +187,15 @@ router.put("/", async (req, res) => {
 
   const newConfig = new Configuration({
     user_id: savedNewUser._id,
-    refresh_time: 0,
-    logging_time: 0,
-    temperature: 0,
-    humidity: 0,
-    ph: 0,
-    light_intensity: 0,
-    nutrient_flow: 0,
-    nutrient_level: 0,
-    acid_solution_level: 0,
-    base_solution_level: 0,
-    tds: 0,
-    ec: 0,
-    day_start: 0,
-    day_end: 0,
+    refresh_time: 10000,
+    logging_time: 10000,
+    ph: 6.5,
+    light_intensity: 20000,
+    nutrient_flow: 5,
+    tds: 1000,
+    ec: 2,
+    day_start: new Date("1970-01-01T23:25:15.000+00:00"),
+    day_end: new Date("1970-01-01T11:30:00.000+00:00"),
   });
 
   await newConfig.save().catch(() => {
