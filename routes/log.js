@@ -40,33 +40,31 @@ router.post("/clear", jwt, async (req, res) => {
     return;
   });
 
-  redis.GET(`${req.user.user_id}:log`);
-
-  fs.rmdir(
-    `${process.env.IMAGE_DIR}/${req.user.user_id}`,
-    { recursive: true },
-    (err) => {
-      if (!err)
-        res.status(200).send({
-          message: "Your agroclimate parameters log has been cleared.",
-        });
-      else
-        res.status(500).send({
-          message: "Failed to clear your saved image(s).",
-        });
-    }
-  );
+  // fs.rmdir(
+  //   `${process.env.IMAGE_DIR}/${req.user.user_id}`,
+  //   { recursive: true },
+  //   (err) => {
+  //     if (!err)
+  //       res.status(200).send({
+  //         message: "Your agroclimate parameters log has been cleared.",
+  //       });
+  //     else
+  //       res.status(500).send({
+  //         message: "Failed to clear your saved image(s).",
+  //       });
+  //   }
+  // );
 });
 
-router.get("/image/:user_id/:filename", (req, res) => {
-  let imagePath = `${process.env.IMAGE_DIR}/${req.params.user_id}/${req.params.filename}`;
-  if (!fs.existsSync(imagePath))
-    res.status(422).send({
-      message:
-        "Invalid image file or you don't have an permission to access the specified image.",
-    });
-  else res.download(imagePath);
-});
+// router.get("/image/:user_id/:filename", (req, res) => {
+//   let imagePath = `${process.env.IMAGE_DIR}/${req.params.user_id}/${req.params.filename}`;
+//   if (!fs.existsSync(imagePath))
+//     res.status(422).send({
+//       message:
+//         "Invalid image file or you don't have an permission to access the specified image.",
+//     });
+//   else res.download(imagePath);
+// });
 
 router.get("/latest", jwt, async (req, res) => {
   let agroclimateLog = await Log.findOne(
