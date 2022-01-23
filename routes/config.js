@@ -53,7 +53,7 @@ router.post("/device", (req, res) => {
 });
 
 router.patch("/", jwt, async (req, res) => {
-  console.info(`[Benchmark] New config received! ${Date.now()}`);
+  console.log(`[Benchmark] New config received! ${Date.now()}`);
   Configuration.findOneAndUpdate(
     { user_id: req.user.user_id },
     {
