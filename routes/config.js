@@ -14,6 +14,7 @@ const jwt = express_jwt({
 // const redis = require("../context/redis");
 
 router.post("/device", (req, res) => {
+  console.log(`[Benchmark] Request of config received! ${Date.now()}`);
   if (req.body.device_token == null)
     return res.status(422).json("No device token found in the request.");
   User.findOne(
@@ -43,6 +44,7 @@ router.post("/device", (req, res) => {
           updatedAt: 1,
         },
         (err, config) => {
+          console.log(`[Benchmark] Config gathered! ${Date.now()}`);
           if (err)
             return res.status(200).send("There is an error on the server :(");
           res.json(config);
