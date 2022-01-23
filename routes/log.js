@@ -9,10 +9,10 @@ const jwt = express_jwt({
   algorithms: ["HS256"],
 });
 
-const fs = require("fs");
-const { promisify } = require("util");
+// const fs = require("fs");
+// const { promisify } = require("util");
 
-const redis = require("../context/redis");
+// const redis = require("../context/redis");
 
 router.get("/", jwt, async (req, res) => {
   Log.find({ user_id: req.user.user_id }, (err, logs) => {
