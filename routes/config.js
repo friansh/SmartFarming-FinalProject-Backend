@@ -10,8 +10,8 @@ const jwt = express_jwt({
   algorithms: ["HS256"],
 });
 
-const { promisify } = require("util");
-const redis = require("../context/redis");
+// const { promisify } = require("util");
+// const redis = require("../context/redis");
 
 router.post("/device", (req, res) => {
   if (req.body.device_token == null)
