@@ -14,22 +14,32 @@ const jwt = express_jwt({
 
 // const redis = require("../context/redis");
 
-router.get("/", jwt, async (req, res) => {
-  Log.find({ user_id: req.user.user_id }, (err, logs) => {
-    if (err) return res.status(200).send("There is an error on the server :(");
+router.get("/:start_time/:end_time", jwt, async (req, res) => {
+  Log.find(
+    {
+      user_id: req.user.user_id,
+      createdAt: {
+        $gte: new Date(req.params.start_time),
+        $lte: new Date(req.params.end_time),
+      },
+    },
+    (err, logs) => {
+      if (err)
+        return res.status(200).send("There is an error on the server :(");
 
-    agroclimateLog = logs.map((log) => ({
-      ph: log.ph,
-      light_intensity_inside: log.light_intensity_inside,
-      light_intensity_outside: log.light_intensity_outside,
-      nutrient_flow: log.nutrient_flow,
-      tds: log.tds,
-      ec: log.ec,
-      createdAt: log.createdAt,
-    }));
+      agroclimateLog = logs.map((log) => ({
+        ph: log.ph,
+        light_intensity_inside: log.light_intensity_inside,
+        light_intensity_outside: log.light_intensity_outside,
+        nutrient_flow: log.nutrient_flow,
+        tds: log.tds,
+        ec: log.ec,
+        createdAt: log.createdAt,
+      }));
 
-    res.status(200).send(agroclimateLog);
-  });
+      res.status(200).send(agroclimateLog);
+    }
+  );
 });
 
 router.post("/clear", jwt, async (req, res) => {
