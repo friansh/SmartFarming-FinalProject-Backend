@@ -192,8 +192,10 @@ router.put("/", async (req, res) => {
     ph: 6.5,
     light_intensity: 20000,
     nutrient_flow: 5,
-    tds: 1000,
-    ec: 2,
+    tds_max: 1300,
+    tds_min: 1000,
+    ec_max: 2,
+    ec_min: 1.6,
     day_start: new Date("1970-01-01T23:25:15.000+00:00"),
     day_end: new Date("1970-01-01T11:30:00.000+00:00"),
   });
